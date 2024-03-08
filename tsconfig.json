@@ -1,0 +1,33 @@
+{
+    "compilerOptions": {
+      "target": "es2019",
+      "module": "commonjs",
+      "outDir": "dist",
+      "sourceMap": true,
+      "rootDir": "src",
+      "declaration": true,
+      "experimentalDecorators": true,
+      "emitDecoratorMetadata": true,
+      "moduleResolution": "node",
+      "declarationMap": true,
+      "lib": [
+        "dom",
+        "es5",
+        "es2017.object",
+        "es2015",
+        "es2017",
+        "es2018",
+        "es2019",
+        "es2020",
+      ]
+    },
+    "files": [
+      "./node_modules/@types/node/index.d.ts"
+   ],
+    "include": [
+      "src/**/*.ts"
+    ],
+    "exclude": [
+      "node_modules"
+    ]
+}

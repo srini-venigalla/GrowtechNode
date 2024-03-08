@@ -1,0 +1,52 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
+  "parserOptions": { "ecmaVersion": 2018, "sourceType": "module" },
+  "plugins": ["prettier", "@typescript-eslint"],
+  "ignorePatterns": ["temp.ts", "**/dist/*.ts"],
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true
+  },
+  "rules": {
+    "no-param-reassign": "error",
+    "no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 1 }],
+    "no-extra-parens": "error",
+    "@typescript-eslint/no-var-requires": 0,
+    "@typescript-eslint/no-explicit-any": 0,
+    "@typescript-eslint/no-this-alias": 0,
+    "comma-dangle": "off",
+    "@typescript-eslint/comma-dangle": ["error", "only-multiline"],
+    "prefer-spread": 0,
+    "eol-last": ["error", "always"],
+    "no-trailing-spaces": "error",
+    "consistent-return": "error",
+    "comma-spacing": ["error", { "before": false, "after": true }],
+    "indent": ["error", 2],
+    "quotes": [2, "single", { "avoidEscape": true }],
+    "no-shadow": "error", // Enforce no-shadow rule
+    "semi": ["error", "always"],
+    "no-var": "error",
+    "@typescript-eslint/no-unused-vars": "error",
+    "@typescript-eslint/explicit-function-return-type": "error",
+    "@typescript-eslint/naming-convention": [
+      "error",
+      {
+        "selector": "variable",
+        "format": ["camelCase", "UPPER_CASE", "PascalCase","snake_case"]
+      },
+      {
+        "selector": "parameter",
+        "format": ["camelCase", "UPPER_CASE","snake_case"],
+        "leadingUnderscore": "allow"
+      },
+      {
+        "selector": "property",
+        "format": ["camelCase", "snake_case", "PascalCase", "UPPER_CASE"]
+      }
+    ],
+    "@typescript-eslint/no-namespace": "error",
+    "object-curly-spacing": ["error", "always"]
+  }
+}
