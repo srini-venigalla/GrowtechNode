@@ -104,11 +104,11 @@ class SchemaController extends Controller {
 
     const effdtQry = `${prefix}.effdt = (SELECT MAX(effdt) FROM ${tableName} WHERE ${primaryKeyColumns
       .map((col) => `${col} = ${prefix}.${col}`)
-      .join(' AND ')})`;
+      .join(' AND ')} group by ${primaryKeyColumns.join(', ')})`;
 
     const effseqQry = `${prefix}.effseq = (SELECT MAX(effseq) FROM ${tableName} WHERE ${primaryKeyColumns
       .map((col) => `${col} = ${prefix}.${col}`)
-      .join(' AND ')} AND effdt = ${prefix}.effdt)`;
+      .join(' AND ')} AND effdt = ${prefix}.effdt  group by ${primaryKeyColumns.join(', ')}, EFFDT)`;
 
     const effStatusQry = `${prefix}.EFF_STATUS='A'`;
 
@@ -237,7 +237,7 @@ class SchemaController extends Controller {
         EFFDT: 'trunc(SYSDATE)',
         EFFSEQ: `nvl((select max(EFFSEQ)+1 from ${tableName}
           where ${primaryKeyColumns.map(col => `${col} = :${col}`).join(' and ')}
-          and EFFDT=trunc(SYSDATE)), 1)`,
+          and EFFDT=trunc(SYSDATE)  group by ${primaryKeyColumns.join(', ')}, EFFDT ), 1)`,
         EFF_STATUS: '\'A\'',
       }[name]);
 
@@ -266,8 +266,10 @@ class SchemaController extends Controller {
       currentData as (
         SELECT ${columnList.map((name) => `a.${name}`).join(', ')}
         FROM ${tableName} a
-        WHERE a.effdt = (SELECT MAX(effdt) FROM ${tableName} WHERE ${primaryKeyColumns.map((name) => `${name} = A.${name}`).join(' and ')})
-        AND a.effseq = (SELECT MAX(effseq) FROM ${tableName} WHERE ${primaryKeyColumns.map((name) => `${name} = A.${name}`).join(' and ')} and effdt = a.effdt)
+        WHERE a.effdt = (SELECT MAX(effdt) FROM ${tableName} WHERE ${primaryKeyColumns.map((name) => `${name} = A.${name}`).join(' and ')}
+          group by ${primaryKeyColumns.join(', ')})
+        AND a.effseq = (SELECT MAX(effseq) FROM ${tableName} WHERE ${primaryKeyColumns.map((name) => `${name} = A.${name}`).join(' and ')} and effdt = a.effdt
+          group by ${primaryKeyColumns.join(', ')}, EFFDT)
       )
       SELECT 
       ${[

@@ -13,9 +13,8 @@ class AssetController extends Controller {
     const sql = `
       SELECT A.ASSET_ID, A.ASSET_TYPE_ID, A.ASSET_NAME, A.LOCATION, A.ACQUISITION_DATE, A.STATUS
       FROM ASSET A
-      WHERE A.effdt = (SELECT MAX(effdt) FROM ASSET WHERE ASSET_ID = A.ASSET_ID)
-      AND A.effseq = (SELECT MAX(effseq) FROM ASSET WHERE ASSET_ID = A.ASSET_ID AND effdt = A.effdt)
-    `;
+      WHERE A.effdt = (SELECT MAX(effdt) FROM ASSET WHERE ASSET_ID = A.ASSET_ID group by ASSET_ID)
+      AND A.effseq = (SELECT MAX(effseq) FROM ASSET WHERE ASSET_ID = A.ASSET_ID AND effdt = A.effdt group by ASSET_ID, EFFDT)`;
     return await execute({ sql, url, values: {} });
   }
 
