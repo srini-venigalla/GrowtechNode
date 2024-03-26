@@ -20,6 +20,26 @@ const models: TsoaRoute.Models = {
         "additionalProperties": true,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IupsertPlantdata": {
+        "dataType": "refObject",
+        "properties": {
+            "ASSET_ID": { "dataType": "string", "required": true },
+            "TRACKING_DT": { "dataType": "string" },
+            "COVERPLANTS": { "dataType": "string" },
+            "CROWNING": { "dataType": "string" },
+            "NOTES": { "dataType": "string" },
+            "STATUS": { "dataType": "string" },
+            "SOIL": { "dataType": "string" },
+            "STEM_COUNT": { "dataType": "double" },
+            "CANOPY_WIDTH": { "dataType": "double" },
+            "DIAMETER": { "dataType": "double" },
+            "HEIGHT": { "dataType": "double" },
+            "GRADE": { "dataType": "string" },
+            "FERTILIZER": { "dataType": "string" },
+        },
+        "additionalProperties": true,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 };
 const validationService = new ValidationService(models);
 
@@ -118,6 +138,30 @@ export function RegisterRoutes(app: express.Express) {
 
 
             const promise = controller.getPalmPlants.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    app.post('/api/v1/growtech/upsertPlantdata',
+        function(request: any, response: any, next: any) {
+            const args = {
+                req: { "in": "request", "name": "req", "required": true, "dataType": "object" },
+                userId: { "in": "header", "name": "x-user-id", "required": true, "dataType": "string" },
+                body: { "in": "body", "name": "body", "required": true, "ref": "IupsertPlantdata" },
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new PlantController();
+
+
+            const promise = controller.upsertPlantdata.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
