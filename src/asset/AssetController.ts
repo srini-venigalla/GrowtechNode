@@ -1,9 +1,23 @@
 import { Body, Controller, Get, Header, Post, Request, Route } from 'tsoa';
 import { isEmpty, isNotEmpty } from '../utils/functions';
 import { execute, update } from '../oracle/oracleutils';
-interface IupsertAsset{
+interface IupsertAsset {
   ASSET_ID: string;
-  ASSET_TYPE_ID: string, ASSET_NAME: string, LOCATION: string, ACQUISITION_DATE: Date, STATUS: string
+  ASSET_TYPE_ID: string;
+  ASSET_NAME: string;
+  LOCATION: string;
+  ACQUISITION_DATE: Date;
+  STATUS: string;
+}
+interface ICreateAssetsBulk{
+  PREFIX: string,
+  ASSET_ID_FROM: string,
+  ASSET_ID_TO: string,
+  ASSET_NAME: string,
+  ASSET_TYPE_ID: string,
+  LOCATION: string,
+  ACQUISITION_DATE: string,
+  STATUS: string,
 }
 @Route('/api/v1/growtech')
 class AssetController extends Controller {
@@ -59,6 +73,27 @@ class AssetController extends Controller {
 
     const values = { ASSET_ID, ASSET_TYPE_ID, ASSET_NAME, LOCATION, ACQUISITION_DATE, STATUS, userId };
     return await update({ sql, url, values });
+  }
+  @Post('/createAssetsBulk')
+  public async createAssetsBulk(@Request() req: any, @Header('x-user-id') userId: string, @Body() body: ICreateAssetsBulk): Promise<any>{
+    const { url } = req;
+    const { PREFIX: prefix, ASSET_ID_FROM: from, ASSET_ID_TO: end, ASSET_NAME, ASSET_TYPE_ID, LOCATION, ACQUISITION_DATE, STATUS } = body;
+
+    const assetIdList = Array.from({ length: Number(end) - Number(from) + 1 }, (_, i) => `${prefix}${String(i + Number(from)).padStart(2, '0')}`);
+    const sql=`
+    insert into ASSET
+    (ASSET_ID, ASSET_TYPE_ID, ASSET_NAME, LOCATION, ACQUISITION_DATE, STATUS, EFFDT, EFFSEQ, EFF_STATUS)
+    with assetIds as (
+      ${assetIdList.map(id => `select '${id}' ASSET_ID from dual`).join(`
+      union
+      `)}
+    )
+    select ASSET_ID, '${ASSET_TYPE_ID}' ASSET_TYPE_ID, '${ASSET_NAME}' ASSET_NAME,
+    '${LOCATION}' LOCATION, to_date('${ACQUISITION_DATE}', 'MM/DD/YY') ACQUISITION_DATE, '${STATUS}' STATUS,
+    to_date('${ACQUISITION_DATE}', 'MM/DD/YY') EFFDT, 1 EFFSEQ, 'A' EFF_STATUS from assetIds
+    where not exists (select 1 from ASSET where ASSET_ID = assetIds.ASSET_ID)`;
+    console.log(sql);
+    return update({ url, sql });
   }
 
 }

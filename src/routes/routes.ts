@@ -6,6 +6,8 @@ import { Controller, ValidationService, FieldErrors, ValidateError, TsoaRoute } 
 import { SchemaController } from './../schema/SchemaController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { PlantController } from './../plants/PlantController';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { AssetController } from './../asset/AssetController';
 import * as express from 'express';
 
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -28,7 +30,7 @@ const models: TsoaRoute.Models = {
             "COVERPLANTS": { "dataType": "string" },
             "CROWNING": { "dataType": "string" },
             "NOTES": { "dataType": "string" },
-            "STATUS": { "dataType": "string" },
+            "PLANT_STATUS": { "dataType": "string" },
             "SOIL": { "dataType": "string" },
             "STEM_COUNT": { "dataType": "double" },
             "CANOPY_WIDTH": { "dataType": "double" },
@@ -36,6 +38,34 @@ const models: TsoaRoute.Models = {
             "HEIGHT": { "dataType": "double" },
             "GRADE": { "dataType": "string" },
             "FERTILIZER": { "dataType": "string" },
+        },
+        "additionalProperties": true,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IupsertAsset": {
+        "dataType": "refObject",
+        "properties": {
+            "ASSET_ID": { "dataType": "string", "required": true },
+            "ASSET_TYPE_ID": { "dataType": "string", "required": true },
+            "ASSET_NAME": { "dataType": "string", "required": true },
+            "LOCATION": { "dataType": "string", "required": true },
+            "ACQUISITION_DATE": { "dataType": "datetime", "required": true },
+            "STATUS": { "dataType": "string", "required": true },
+        },
+        "additionalProperties": true,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ICreateAssetsBulk": {
+        "dataType": "refObject",
+        "properties": {
+            "PREFIX": { "dataType": "string", "required": true },
+            "ASSET_ID_FROM": { "dataType": "string", "required": true },
+            "ASSET_ID_TO": { "dataType": "string", "required": true },
+            "ASSET_NAME": { "dataType": "string", "required": true },
+            "ASSET_TYPE_ID": { "dataType": "string", "required": true },
+            "LOCATION": { "dataType": "string", "required": true },
+            "ACQUISITION_DATE": { "dataType": "string", "required": true },
+            "STATUS": { "dataType": "string", "required": true },
         },
         "additionalProperties": true,
     },
@@ -162,6 +192,76 @@ export function RegisterRoutes(app: express.Express) {
 
 
             const promise = controller.upsertPlantdata.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    app.get('/api/v1/growtech/assets',
+        function(request: any, response: any, next: any) {
+            const args = {
+                req: { "in": "request", "name": "req", "required": true, "dataType": "object" },
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new AssetController();
+
+
+            const promise = controller.listAssets.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    app.post('/api/v1/growtech/upsertAsset',
+        function(request: any, response: any, next: any) {
+            const args = {
+                req: { "in": "request", "name": "req", "required": true, "dataType": "object" },
+                userId: { "in": "header", "name": "x-user-id", "required": true, "dataType": "string" },
+                body: { "in": "body", "name": "body", "required": true, "ref": "IupsertAsset" },
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new AssetController();
+
+
+            const promise = controller.upsertAsset.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    app.post('/api/v1/growtech/createAssetsBulk',
+        function(request: any, response: any, next: any) {
+            const args = {
+                req: { "in": "request", "name": "req", "required": true, "dataType": "object" },
+                userId: { "in": "header", "name": "x-user-id", "required": true, "dataType": "string" },
+                body: { "in": "body", "name": "body", "required": true, "ref": "ICreateAssetsBulk" },
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new AssetController();
+
+
+            const promise = controller.createAssetsBulk.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
